@@ -4,6 +4,28 @@
  * Seerat Awan (c) 2022 autocapture.js
  * Released under the MIT License
  */
+! function(e, n) {
+    "object" == typeof exports && "undefined" != typeof module ? module.exports = n() : "function" == typeof define && define.amd ? define(n) : (e = e || self).getXPath = n()
+}(this, function() {
+    return function(e) {
+        var n = e;
+        if (n && n.id) return '//*[@id="' + n.id + '"]';
+        for (var o = []; n && Node.ELEMENT_NODE === n.nodeType;) {
+            for (var i = 0, r = !1, d = n.previousSibling; d;) d.nodeType !== Node.DOCUMENT_TYPE_NODE && d.nodeName === n.nodeName && i++, d = d.previousSibling;
+            for (d = n.nextSibling; d;) {
+                if (d.nodeName === n.nodeName) {
+                    r = !0;
+                    break
+                }
+                d = d.nextSibling
+            }
+            o.push((n.prefix ? n.prefix + ":" : "") + n.localName + (i || r ? "[" + (i + 1) + "]" : "")), n = n.parentNode
+        }
+        return o.length ? "/" + o.reverse().join("/") : ""
+    }
+});
+
+
 ! function(t, e) {
     "object" == typeof exports && "undefined" != typeof module ? module.exports = e() : "function" == typeof define && define.amd ? define(e) : (t = "undefined" != typeof globalThis ? globalThis : t || self).AutoCapture = e()
 }(this, (function() {
@@ -359,7 +381,7 @@ function createXPathFromElement(element) {
                 var e = function(t, e, n) {
                     switch (e) {
                         case "text":
-                            return createXPathFromElement(t);
+                            return getXPath(t);
                             // return function(t, e) {
                             //     var n, r = "";
                             //     return y(t.textContent, SVGAnimatedString) && (r = (null === (n = t.textContent) || void 0 === n ? void 0 : n.baseVal) || ""), r = t.textContent, e && (r = r.replace(/./g, "*")), r
